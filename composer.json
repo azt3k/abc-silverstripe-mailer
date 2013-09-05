@@ -1,0 +1,27 @@
+{
+    "name": "azt3k/abc-silverstripe-mailer",
+    "description": "Library that adds smtp mail support to Silverstripe",
+    "license": "BSD",
+    "type": "silverstripe-module",
+    "authors": [
+        {
+            "name": "Aaron Latham-Ilari",
+            "email": "abcdigital@abcdigital.co.nz"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php"                       : ">=5.3.0",
+        "composer/installers"       : ">=1.0",          
+        "silverstripe/framework"    : "3.1.*@dev",
+        "silverstripe/cms"          : "3.1.*@dev",
+        "phpmailer/phpmailer"       : "dev-master"
+    },
+    "extra": {
+        "installer-paths": {
+            "vendor/{$name}": [
+                "phpmailer/phpmailer"
+            ]
+        }
+    }    
+}
