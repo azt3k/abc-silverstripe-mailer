@@ -31,7 +31,7 @@ class SmtpMailer extends Mailer {
         $class::$conf = $class::array_merge_recursive_distinct($class::$conf, $conf);
     }
 
-    public static function get_conf($conf) {
+    public static function get_conf() {
         $class = get_called_class();
         return (object) $class::$conf;
     }    
