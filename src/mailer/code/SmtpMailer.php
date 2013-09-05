@@ -120,7 +120,13 @@ class SmtpMailer extends Mailer {
         Debug::log( $msg );
 		throw new Exception($msg);
     }
-        
+    
+    /**
+     *  @param  string $to
+     *  @param  string $from
+     *  @param  string $subject
+     *  @return void
+     */        
     protected function buildBasicMail( $to, $from, $subject )
     {
         if( preg_match('/(\'|")(.*?)\1[ ]+<[ ]*(.*?)[ ]*>/', $from, $from_splitted ) ) {
@@ -177,7 +183,7 @@ class SmtpMailer extends Mailer {
 
         foreach ( $array2 as $key => $value ) {
             if ( is_array( $value ) && isset( $merged [$key] ) && is_array( $merged [$key] ) ) {
-                $merged [$key] = $this->array_merge_recursive_distinct( $merged [$key], $value );
+                $merged [$key] = self::array_merge_recursive_distinct( $merged [$key], $value );
             } else {
                 $merged [$key] = $value;
             }
