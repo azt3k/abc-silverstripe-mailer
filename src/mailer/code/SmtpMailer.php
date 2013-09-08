@@ -9,10 +9,10 @@ class SmtpMailer extends Mailer {
 	}
 
     protected static $conf = array(
-        'default_from'      => array(
-                                    'name'  => 'admin',
-                                    'email' =>'admin@localhost'                     
-                                ),
+        'default_from'      =>  array(
+            'name'  => 'admin',
+            'email' =>'admin@localhost'                     
+        ),
         'charset_encoding'  => 'utf-8',
         'server'            => 'localhost',
         'port'              => 25,
@@ -137,7 +137,9 @@ class SmtpMailer extends Mailer {
             $this->mailer->SetFrom( $from );
         }
 
-        $to = validEmailAddr( $to );
+        // not entirely sure what this will do
+        if (!Email::validEmailAddress($to)) $to = false;
+
         $this->mailer->ClearAddresses();
         $this->mailer->AddAddress( $to, ucfirst( substr( $to, 0, strpos( $to, '@' ) ) ) ); // For the recipient's name, the string before the @ from the e-mail address is used
         $this->mailer->Subject = $subject;
