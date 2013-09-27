@@ -88,6 +88,11 @@ class SmtpMailer extends Mailer {
     {
 		
 		$result = false;
+
+        if (!$from) {
+            $class = get_called_class();
+            $from =  $class::$conf['default_from']['email'];
+        }        
 		
         if( $this->mailer->SMTPDebug > 0 ) echo "<em><strong>*** Debug mode is on</strong>, printing debug messages and not redirecting to the website:</em><br />";
         $msgForLog = "\n*** The sender was : $from\n*** The message was :\n{$this->mailer->AltBody}\n";
