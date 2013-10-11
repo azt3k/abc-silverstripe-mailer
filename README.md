@@ -45,7 +45,7 @@ SmtpMailer::set_conf(array(
     'server'            => 'smtp.gmail.com',
     'port'              => 587,
     'secure'            => 'tls',
-    'authenticate'      => false,
+    'authenticate'      => true,
     'user'              => 'user@gmail.com',
     'pass'              => 'password',
     'debug'             => 0,
