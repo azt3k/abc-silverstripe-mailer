@@ -3,10 +3,6 @@
 class SmtpMailer extends Mailer {
 
     public $mailer = null;
-    
-	public function __construct($mailer = null) {
-	    $this->mailer = $mailer;
-	}
 
     protected static $conf = array(
         'default_from'      =>  array(
@@ -24,22 +20,39 @@ class SmtpMailer extends Mailer {
         'lang'              => 'en'
     );
 
+    /**
+     * Constructor
+     * 
+     * @param Mailer $mailer
+     */
+    public function __construct($mailer = null) {
+        $this->mailer = $mailer;
+    }    
 
+    /**
+     *  @param  array|object $conf An associative array containing the configuration - see self::$conf for an example
+     *  @return void
+     */
     public static function set_conf($conf) {
         $conf = (array) $conf;
         $class = get_called_class();
         $class::$conf = $class::array_merge_recursive_distinct($class::$conf, $conf);
     }
 
+    /**
+     *  @return stdClass
+     */
     public static function get_conf() {
         $class = get_called_class();
         return (object) $class::$conf;
     }    
 
-    protected function configure()
-    {
+    /**
+     *  @return void
+     */
+    protected function configure() {
         $conf = self::get_conf();
-        if( !$this->mailer ) {
+        if ( !$this->mailer ) {
 	        $this->mailer = new PHPMailer( true );
             $this->mailer->IsSMTP();
             $this->mailer->CharSet = $conf->charset_encoding;
@@ -47,7 +60,7 @@ class SmtpMailer extends Mailer {
             $this->mailer->Port = $conf->port;
             $this->mailer->SMTPSecure = $conf->secure;
             $this->mailer->SMTPAuth = $conf->authenticate;
-            if( $this->mailer->SMTPAuth ) {
+            if ( $this->mailer->SMTPAuth ) {
                 $this->mailer->Username = $conf->user;
                 $this->mailer->Password = $conf->pass;
             }
@@ -57,9 +70,18 @@ class SmtpMailer extends Mailer {
     }	
 	
 
-    /* Overwriting Mailer's function */
-	function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false)
-	{
+    /**
+     * Overwriting Mailer's function
+     * 
+     *  @param string   $to             the recipient
+     *  @param string   $from           the sender
+     *  @param string   $subject        the subject
+     *  @param string   $plainContent   plain text content
+     *  @param array    $attachedFiles  an array of files to attach
+     *  @param array    $customheaders  an array of custom headers to attach
+     *  @return boolean
+     */    
+	public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
 	    $this->configure();
         $this->mailer->IsHTML( false );
         $this->mailer->Body = $plainContent;
@@ -67,15 +89,25 @@ class SmtpMailer extends Mailer {
 	}
 
 
-    /* Overwriting Mailer's function */
-	function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false)
-	{
+    /**
+     * Overwriting Mailer's function
+     * 
+     *  @param string   $to             the recipient
+     *  @param string   $from           the sender
+     *  @param string   $subject        the subject
+     *  @param string   $htmlContent    html content
+     *  @param array    $attachedFiles  an array of files to attach
+     *  @param array    $customheaders  an array of custom headers to attach
+     *  @param string   $plainContent   plaintext alternative
+     *  @param array    $inlineImages   an array of image files to attach inline 
+     *  @return boolean
+     */  
+	public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
 	    $this->configure();
         $this->mailer->IsHTML( true );
         if( $inlineImages ) {
             $this->mailer->MsgHTML( $htmlContent, Director::baseFolder() );
-        }
-        else {
+        } else {
             $this->mailer->Body = $htmlContent;
             if( empty( $plainContent ) ) $plainContent = trim( Convert::html2raw( $htmlContent ) );
             $this->mailer->AltBody = $plainContent;
@@ -83,9 +115,16 @@ class SmtpMailer extends Mailer {
         return $this->sendMailViaSmtp( $to, $from, $subject, $attachedFiles, $customheaders, $inlineImages );        
     }
     
-    
-    protected function sendMailViaSmtp( $to, $from, $subject, $attachedFiles = false, $customheaders = false, $inlineImages = false )
-    {
+    /**
+     *  @param string   $to             the recipient
+     *  @param string   $from           the sender
+     *  @param string   $subject        the subject
+     *  @param array    $attachedFiles  an array of files to attach
+     *  @param array    $customheaders  an array of custom headers to attach
+     *  @param array    $inlineImages   an array of image files to attach inline 
+     *  @return boolean
+     */
+    protected function sendMailViaSmtp( $to, $from, $subject, $attachedFiles = false, $customheaders = false, $inlineImages = false ) {
 		
 		$result = false;
 
@@ -118,7 +157,11 @@ class SmtpMailer extends Mailer {
 		return $result;
     }
     
-    
+    /**
+     *  @param string $e            The error message - usually Exception::errorMessage()
+     *  @param string $msgForLog    The message for the SS log
+     *  @param return void
+     */
     public function handleError( $e, $msgForLog )
     {
         $msg = $e . $msgForLog;

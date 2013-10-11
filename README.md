@@ -16,7 +16,7 @@ add the following to you composer.json file:
 Add something like the following your mysite/_config.php file:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SmtpMailer::set_config(array(
+SmtpMailer::set_conf(array(
     'default_from'      => array(
                                'name'  => 'admin',
                                'email' => 'admin@localhost'
@@ -27,6 +27,26 @@ SmtpMailer::set_config(array(
     'secure'            => null,
     'authenticate'      => false,
     'user'              => 'username',
+    'pass'              => 'password',
+    'debug'             => 0,
+    'lang'              => 'en'
+));
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+or
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SmtpMailer::set_conf(array(
+    'default_from'      => array(
+                               'name'  => 'user',
+                               'email' => 'user@gmail.com'
+                           ),
+    'charset_encoding'  => 'utf-8',
+    'server'            => 'smtp.gmail.com',
+    'port'              => 587,
+    'secure'            => 'tls',
+    'authenticate'      => false,
+    'user'              => 'user@gmail.com',
     'pass'              => 'password',
     'debug'             => 0,
     'lang'              => 'en'
