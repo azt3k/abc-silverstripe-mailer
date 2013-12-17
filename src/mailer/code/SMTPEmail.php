@@ -3,7 +3,7 @@
 class SMTPEmail extends Email {
 	
 	public function attachFile($filename, $attachedFilename = null, $mimetype = null) {
-		if(!$attachedFilename) $attachedFilename = str_replace(realpath(Director::baseFolder()),'',realpath($filename));
+		if(!$attachedFilename) $attachedFilename = str_replace(Director::baseFolder(),'',$filename);
 		$absoluteFileName = Director::getAbsFile($filename);
 		if(file_exists($absoluteFileName)) {
 			$this->attachFileFromString(file_get_contents($absoluteFileName), $attachedFilename, $mimetype);
