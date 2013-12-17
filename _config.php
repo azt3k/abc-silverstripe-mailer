@@ -1,3 +1,4 @@
 <?php
 
-Email::set_mailer(new SmtpMailer); 
+Email::set_mailer(new SmtpMailer);
+Object::useCustomClass('Email', 'SMTPEmail');

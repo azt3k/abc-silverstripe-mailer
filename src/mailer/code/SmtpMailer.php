@@ -125,6 +125,8 @@ class SmtpMailer extends Mailer {
      *  @return boolean
      */
     protected function sendMailViaSmtp( $to, $from, $subject, $attachedFiles = false, $customheaders = false, $inlineImages = false ) {
+
+        // die(print_r($attachedFiles,1));
 		
 		$result = false;
 
