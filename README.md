@@ -1,21 +1,17 @@
 Setup
 -----
 
+Add the following to you composer.json file:
 
-
-add the following to you composer.json file:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```json
 "require": {
     "azt3k/abc-silverstripe-mailer" : "dev-master"
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
+```
 
 Add something like the following your mysite/_config.php file:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```php
 SmtpMailer::set_conf(array(
     'default_from'      => array(
                                'name'  => 'admin',
@@ -31,11 +27,10 @@ SmtpMailer::set_conf(array(
     'debug'             => 0,
     'lang'              => 'en'
 ));
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+```
 or
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```php
 SmtpMailer::set_conf(array(
     'default_from'      => array(
                                'name'  => 'user',
@@ -51,4 +46,4 @@ SmtpMailer::set_conf(array(
     'debug'             => 0,
     'lang'              => 'en'
 ));
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
