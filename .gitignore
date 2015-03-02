@@ -1,2 +1,10 @@
 *.sublime-project
 *.sublime-workspace
+/composer.lock
+/sqlite3
+/siteconfig
+/reports
+/framework
+/cms
+/vendor
+/build
