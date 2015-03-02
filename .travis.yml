@@ -22,4 +22,5 @@ before_script:
  - cd ~/builds/ss
 
 script:
+ - git checkout travis
  - vendor/bin/phpunit abc-silverstripe-mailer/tests/
