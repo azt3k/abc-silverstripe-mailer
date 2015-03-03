@@ -1,0 +1,11 @@
+#!/bin/bash
+
+PDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR=~/builds/abc-silverstripe-mailer
+
+export DB=SQLITE
+
+rm -rf $DIR/ss/abc-silverstripe-mailer
+cp -rf $PDIR/.. $DIR/ss/abc-silverstripe-mailer
+
+bash $DIR/ss/framework/sake dev/tests/module/abc-silverstripe-mailer

@@ -49,7 +49,10 @@ SmtpMailer::set_conf(array(
 ```
 
 
-# License
+License
+-------
+
+
 Copyright (c) 2015, azt3k
 All rights reserved.
 

@@ -9,12 +9,6 @@
             "email": "az@dev-io.us"
         }
     ],
-    "repositories": [
-        {
-            "type" : "vcs",
-            "url"  : "https://github.com/silverstripe-labs/silverstripe-travis-support"
-        }
-    ],
     "minimum-stability": "dev",
     "require": {
         "php"                           : ">=5.3.0",
@@ -24,7 +18,7 @@
         "phpmailer/phpmailer"           : "dev-master"
     },
     "require-dev": {
-        "silverstripe/travis-support"   : "*",
+        "phpunit/phpunit"               : "*@stable",
         "silverstripe/sqlite3"          : "*"
     },
     "extra": {

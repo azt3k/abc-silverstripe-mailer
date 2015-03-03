@@ -1,0 +1,39 @@
+#!/bin/bash
+
+PDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR=~/builds/abc-silverstripe-mailer
+
+export TRAVIS_BRANCH=1.0
+export TRAVIS_COMMIT=HEAD
+export TRAVIS_REPO_SLUG=azt3k/abc-silverstripe-mailer
+export DB=SQLITE
+export CORE_RELEASE=3.1
+
+# get to the right place
+cd $PDIR/..
+
+# run the travis setup script
+mkdir -p $DIR
+git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git $DIR/travis-support
+php $DIR/travis-support/travis_setup.php --source $PDIR/.. --target $DIR/ss
+
+# make some mods to the project build
+mkdir $DIR/ss/silverstripe-cache
+
+# apply patch
+# echo "<?php
+# if (!class_exists('PHPUnit_Framework_TestResult')) require_once 'PHPUnit/Framework/TestResult.php';
+# if (!interface_exists('PHPUnit_Framework_TestListener')) require_once 'PHPUnit/Framework/TestListener.php';
+# ?>
+# " | cat - $DIR/ss/framework/dev/SapphireTestReporter.php > /tmp/out && mv /tmp/out $DIR/ss/framework/dev/SapphireTestReporter.php
+sed -i "s/if(\!class_exists('PHPUnit_Framework_TestResult', false)) require_once 'PHPUnit\/Framework\/TestResult.php';/if (\!class_exists('PHPUnit_Framework_TestResult')) require_once 'PHPUnit\/Framework\/TestResult.php';/g" $DIR/ss/framework/dev/SapphireTestReporter.php
+sed -i "s/if(\!class_exists('PHPUnit_Framework_TestListener', false)) require_once 'PHPUnit\/Framework\/TestListener.php';/if (\!interface_exists('PHPUnit_Framework_TestListener')) require_once 'PHPUnit\/Framework\/TestListener.php';/g" $DIR/ss/framework/dev/SapphireTestReporter.php
+
+#sed -i "s/if(\!class_exists('PHPUnit_Framework_TestResult', false)) require_once 'PHPUnit\/Framework\/TestResult.php';/if (!class_exists('PHPUnit_Framework_TestResult')) require_once 'PHPUnit/Framework/TestResult.php';/g" ~/builds/abc-silverstripe-mailer/ss/framework/dev/SapphireTestReporter.php
+
+
+# "redeploy"
+rm -rf $DIR/ss/abc-silverstripe-mailer
+cp -rf $PDIR/.. $DIR/ss/abc-silverstripe-mailer
+
+bash $DIR/ss/framework/sake dev/build
