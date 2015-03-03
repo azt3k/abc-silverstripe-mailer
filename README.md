@@ -1,3 +1,5 @@
+https://travis-ci.org/azt3k/abc-silverstripe-mailer.svg?branch=travis
+
 Setup
 -----
 
