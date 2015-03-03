@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/azt3k/abc-silverstripe-mailer.svg?branch=travis)](https://travis-ci.org/azt3k/abc-silverstripe-mailer)
+[![Build Status](https://travis-ci.org/azt3k/abc-silverstripe-mailer.svg?branch=master)](https://travis-ci.org/azt3k/abc-silverstripe-mailer)
 
 Setup
 -----
