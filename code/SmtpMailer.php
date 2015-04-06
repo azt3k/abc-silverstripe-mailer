@@ -216,7 +216,8 @@ class SmtpMailer extends Mailer {
     protected function attachFiles( array $attachedFiles ) {
         if( !empty( $attachedFiles ) and is_array( $attachedFiles ) ) {
             foreach( $attachedFiles as $attachedFile ) {
-				debug::dump($attachedFile['filename']);
+				// Making attached files work again
+				//debug::dump($attachedFile['filename']);
                 $this->mailer->AddAttachment( $attachedFile['filename'] );
             }
         }
