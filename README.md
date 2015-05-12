@@ -7,7 +7,7 @@ Add the following to you composer.json file:
 
 ```json
 "require": {
-    "azt3k/abc-silverstripe-mailer" : "dev-master"
+    "azt3k/abc-silverstripe-mailer" : "*@stable"
 }
 ```
 

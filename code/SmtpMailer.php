@@ -38,26 +38,36 @@ class SmtpMailer extends Mailer {
      */
     public static function set_conf($conf) {
         $conf = (array) $conf;
-        $class = get_called_class();
-        $class::$conf = $class::array_merge_recursive_distinct($class::$conf, $conf);
+        static::$conf = static::array_merge_recursive_distinct(static::$conf, $conf);
     }
 
     /**
      *  @return stdClass
      */
     public static function get_conf() {
-        if (!$conf = Config::inst()->get('SmtpMailer', 'conf')) {
-            $class = get_called_class();
-            $conf = $class::$conf;
-        }
-        return (object) $conf;
+        return (object) static::$conf;
+    }
+
+    /**
+     * @return void
+     */
+    protected static function set_conf_from_yaml() {
+        $conf = (array) Config::inst()->get('SmtpMailer', 'conf');
+        if (!empty($conf))
+            static::$conf = static::array_merge_recursive_distinct(static::$conf, $conf);
     }
 
     /**
      *  @return void
      */
     protected function configure() {
-        $conf = self::get_conf();
+
+        // configure from YAML if available
+        static::set_conf_from_yaml();
+
+        // get the configuration
+        $conf = static::get_conf();
+
         if ( !$this->mailer ) {
             $this->mailer = new PHPMailer( true );
             $this->mailer->IsSMTP();
