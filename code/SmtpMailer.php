@@ -4,10 +4,13 @@ class SmtpMailer extends Mailer {
 
     public $mailer = null;
 
-    protected static $conf = array(
+    /**
+     * @config
+     */
+    private static $conf = array(
         'default_from'      =>  array(
             'name'  => 'admin',
-            'email' =>'admin@localhost'
+            'email' => 'admin@localhost'
         ),
         'charset_encoding'  => 'utf-8',
         'server'            => 'localhost',
@@ -43,8 +46,11 @@ class SmtpMailer extends Mailer {
      *  @return stdClass
      */
     public static function get_conf() {
-        $class = get_called_class();
-        return (object) $class::$conf;
+        if (!$conf = Config::inst()->get('SmtpMailer', 'conf')) {
+            $class = get_called_class();
+            $conf = $class::$conf;
+        }
+        return (object) $conf;
     }
 
     /**

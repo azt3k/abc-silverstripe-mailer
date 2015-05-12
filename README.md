@@ -50,6 +50,25 @@ SmtpMailer::set_conf(array(
 ));
 ````
 
+Alternatively insert the configuration into your `project/_config/config.yml` file
+
+````yaml
+SmtpMailer:
+  conf:
+    default_from:
+      name: user
+      email: user@gmail.com
+    charset_encoding: utf-8
+    server: smtp.gmail.com
+    port: 587
+    secure: tls
+    authenticate: true
+    user: user@gmail.com
+    pass: password'
+    debug: 0
+    lang: en
+````
+
 
 License
 -------
