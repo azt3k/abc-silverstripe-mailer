@@ -4,10 +4,7 @@ class SmtpMailer extends Mailer {
 
     public $mailer = null;
 
-    /**
-     * @config
-     */
-    private static $conf = array(
+    private static $defaults = array(
         'default_from'      =>  array(
             'name'  => 'admin',
             'email' => 'admin@localhost'
@@ -22,6 +19,11 @@ class SmtpMailer extends Mailer {
         'debug'             => 0,
         'lang'              => 'en'
     );
+
+    /**
+     * @config
+     */
+    private static $conf = array();
 
     /**
      * Constructor
@@ -45,7 +47,7 @@ class SmtpMailer extends Mailer {
      *  @return stdClass
      */
     public static function get_conf() {
-        return (object) static::$conf;
+        return (object) static::array_merge_recursive_distinct(static::$defaults, static::$conf);
     }
 
     /**
@@ -53,6 +55,7 @@ class SmtpMailer extends Mailer {
      */
     protected static function set_conf_from_yaml() {
         $conf = (array) Config::inst()->get('SmtpMailer', 'conf');
+        // die(print_r($conf,1));
         if (!empty($conf))
             static::$conf = static::array_merge_recursive_distinct(static::$conf, $conf);
     }
