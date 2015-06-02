@@ -180,7 +180,7 @@ class SmtpMailer extends Mailer {
     public function handleError( $e, $msgForLog )
     {
         $msg = $e . $msgForLog;
-        Debug::log( $msg );
+        SS_Log::log($msg, Zend_Log::ERR);
         throw new Exception($msg);
     }
 
