@@ -142,7 +142,7 @@ class SmtpMailer extends Mailer {
      *  @param array    $inlineImages   an array of image files to attach inline
      *  @return boolean
      */
-    protected function sendMailViaSmtp( $to, $from, $subject, $attachedFiles = false, $customheaders = false, $inlineImages = false ) {
+    protected function sendMailViaSmtp( $to, $from, $subject, $attachedFiles = array(), $customheaders = false, $inlineImages = false ) {
         $result = false;
 
         if (!$from) {
