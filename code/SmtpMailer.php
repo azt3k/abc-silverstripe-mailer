@@ -40,14 +40,14 @@ class SmtpMailer extends Mailer {
      */
     public static function set_conf($conf) {
         $conf = (array) $conf;
-        static::$conf = static::array_merge_recursive_distinct(static::$conf, $conf);
+        self::$conf = self::array_merge_recursive_distinct(self::$conf, $conf);
     }
 
     /**
      *  @return stdClass
      */
     public static function get_conf() {
-        return (object) static::array_merge_recursive_distinct(static::$defaults, static::$conf);
+        return (object) self::array_merge_recursive_distinct(self::$defaults, self::$conf);
     }
 
     /**
@@ -57,7 +57,7 @@ class SmtpMailer extends Mailer {
         $conf = (array) Config::inst()->get('SmtpMailer', 'conf');
         // die(print_r($conf,1));
         if (!empty($conf))
-            static::$conf = static::array_merge_recursive_distinct(static::$conf, $conf);
+            self::$conf = self::array_merge_recursive_distinct(self::$conf, $conf);
     }
 
     /**
@@ -66,10 +66,10 @@ class SmtpMailer extends Mailer {
     protected function configure() {
 
         // configure from YAML if available
-        static::set_conf_from_yaml();
+        self::set_conf_from_yaml();
 
         // get the configuration
-        $conf = static::get_conf();
+        $conf = self::get_conf();
 
         if ( !$this->mailer ) {
             $this->mailer = new PHPMailer( true );
