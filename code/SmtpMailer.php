@@ -99,7 +99,7 @@ class SmtpMailer extends Mailer {
      *  @param array    $customheaders  an array of custom headers to attach
      *  @return boolean
      */
-    public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
+    public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = array(), $customheaders = false) {
         $this->configure();
         $this->mailer->IsHTML( false );
         $this->mailer->Body = $plainContent;
@@ -120,7 +120,7 @@ class SmtpMailer extends Mailer {
      *  @param array    $inlineImages   an array of image files to attach inline
      *  @return boolean
      */
-    public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
+    public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = array(), $customheaders = false, $plainContent = false, $inlineImages = false) {
         $this->configure();
         $this->mailer->IsHTML( true );
         if( $inlineImages ) {
