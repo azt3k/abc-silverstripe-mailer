@@ -80,15 +80,15 @@ class SMTPMailerTest extends SapphireTest
 
         // check bccs
         $bccs = $mailer->getBccAddresses();
-        $this->assertEquals(true, in_array($bcc, $bccs);
+        $this->assertEquals(true, in_array($bcc, $bccs));
 
         // check ccs
         $ccs = $mailer->getCcAddresses();
-        $this->assertEquals(true, in_array($cc, $ccs);
+        $this->assertEquals(true, in_array($cc, $ccs));
 
         // check replytos
         $replytos = $mailer->getReplyToAddresses();
-        $this->assertEquals(true, in_array($reployto, $reploytos);
+        $this->assertEquals(true, in_array($reployto, $reploytos));
 
         // check send
         $this->assertEquals(true, $e->send());
@@ -117,15 +117,15 @@ class SMTPMailerTest extends SapphireTest
 
         // check bccs
         $bccs = $mailer->getBccAddresses();
-        $this->assertEquals(true, in_array($bcc, $bccs);
+        $this->assertEquals(true, in_array($bcc, $bccs));
 
         // check ccs
         $ccs = $mailer->getCcAddresses();
-        $this->assertEquals(true, in_array($cc, $ccs);
+        $this->assertEquals(true, in_array($cc, $ccs));
 
         // check replytos
         $replytos = $mailer->getReplyToAddresses();
-        $this->assertEquals(true, in_array($reployto, $reploytos);
+        $this->assertEquals(true, in_array($reployto, $reploytos));
 
         // check send
         $this->assertEquals(true, $e->send());
