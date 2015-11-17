@@ -56,4 +56,39 @@ class SMTPMailerTest extends SapphireTest
         $this->assertEquals(true, $e->send());
 
     }
+
+    /**
+     * @depends testEmail
+     */
+    public function testEmailCustomHeaders()
+    {
+
+        $e = new Email();
+        $e->To = "abc-silverstripe-mailer@mailinator.com";
+        $e->Subject = "Hi there";
+        $e->Body = "I just really wanted to email you and say hi.";
+        $e->Cc = "abc-silverstripe-mailer-cc@mailinator.com";
+        $e->Bcc = "abc-silverstripe-mailer-bcc@mailinator.com";
+        $e->ReplyTo = "abc-silverstripe-mailer-reply-to@mailinator.com";
+
+        $this->assertEquals(true, $e->send());
+
+    }
+    /**
+     * @depends testSMTPEmail
+     */
+    public function testSMTPEmailCustomHeaders()
+    {
+
+        $e = new SMTPEmail();
+        $e->To = "abc-silverstripe-mailer@mailinator.com";
+        $e->Subject = "Hi there";
+        $e->Body = "I just really wanted to email you and say hi.";
+        $e->Cc = "abc-silverstripe-mailer-cc@mailinator.com";
+        $e->Bcc = "abc-silverstripe-mailer-bcc@mailinator.com";
+        $e->ReplyTo = "abc-silverstripe-mailer-reply-to@mailinator.com";
+
+        $this->assertEquals(true, $e->send());
+
+    }
 }
