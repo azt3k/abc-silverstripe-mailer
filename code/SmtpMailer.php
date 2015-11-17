@@ -242,7 +242,27 @@ class SmtpMailer extends Mailer {
                 $this->mailer->AddCustomHeader( $header_name.':'.$header_value );
             }
         }
-
+		
+		//Convert cc/bcc/ReplyTo from headers to properties
+				foreach($headers as $header_name => $header_value){
+		                  if(in_array(strtolower($header_name), array('cc', 'bcc', 'reply-to', 'replyto'))){
+		                    $addresses = preg_split('/(,|;)/', $header_value);
+		                  }
+		                  switch(strtolower($header_name)) {
+		                    case 'cc':
+		                      foreach($addresses as $address){ $this->mailer->addCC($address); }
+		                      break;
+		                    case 'bcc':
+		                      foreach($addresses as $address) { $this->mailer->addBCC($address); }
+		                      break;
+		                    case 'reply-to':
+		                      foreach($addresses as $address) { $this->mailer->addReplyTo($address); }
+		                      break;
+		                    default:
+					$this->mailer->AddCustomHeader($header_name . ':' . $header_value);
+		                      break;
+		                  }
+				}
     }
 
     /**
@@ -252,7 +272,9 @@ class SmtpMailer extends Mailer {
     protected function attachFiles( array $attachedFiles ) {
         if( !empty( $attachedFiles ) and is_array( $attachedFiles ) ) {
             foreach( $attachedFiles as $attachedFile ) {
-                $this->mailer->AddAttachment( Director::baseFolder().DIRECTORY_SEPARATOR.$attachedFile['filename'] );
+				// Making attached files work again
+				//debug::dump($attachedFile['filename']);
+                $this->mailer->AddAttachment( $attachedFile['filename'] );
             }
         }
     }

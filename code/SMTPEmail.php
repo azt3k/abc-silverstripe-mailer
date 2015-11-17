@@ -13,4 +13,5 @@ class SMTPEmail extends Email {
 		return $this;
 	}
 
+
 }
