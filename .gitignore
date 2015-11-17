@@ -1,3 +1,21 @@
 *.sublime-project
 *.sublime-workspace
 *.tar
+
+# Other generated/common stuff.
+.tmp
+.DS_Store
+*.pyc
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+
+# Netbeans
+/nbproject

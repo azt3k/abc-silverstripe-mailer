@@ -40,14 +40,14 @@ class SmtpMailer extends Mailer {
      */
     public static function set_conf($conf) {
         $conf = (array) $conf;
-        static::$conf = static::array_merge_recursive_distinct(static::$conf, $conf);
+        self::$conf = self::array_merge_recursive_distinct(self::$conf, $conf);
     }
 
     /**
      *  @return stdClass
      */
     public static function get_conf() {
-        return (object) static::array_merge_recursive_distinct(static::$defaults, static::$conf);
+        return (object) self::array_merge_recursive_distinct(self::$defaults, self::$conf);
     }
 
     /**
@@ -57,7 +57,7 @@ class SmtpMailer extends Mailer {
         $conf = (array) Config::inst()->get('SmtpMailer', 'conf');
         // die(print_r($conf,1));
         if (!empty($conf))
-            static::$conf = static::array_merge_recursive_distinct(static::$conf, $conf);
+            self::$conf = self::array_merge_recursive_distinct(self::$conf, $conf);
     }
 
     /**
@@ -66,10 +66,10 @@ class SmtpMailer extends Mailer {
     protected function configure() {
 
         // configure from YAML if available
-        static::set_conf_from_yaml();
+        self::set_conf_from_yaml();
 
         // get the configuration
-        $conf = static::get_conf();
+        $conf = self::get_conf();
 
         if ( !$this->mailer ) {
             $this->mailer = new PHPMailer( true );
@@ -99,7 +99,7 @@ class SmtpMailer extends Mailer {
      *  @param array    $customheaders  an array of custom headers to attach
      *  @return boolean
      */
-    public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
+    public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = array(), $customheaders = false) {
         $this->configure();
         $this->mailer->IsHTML( false );
         $this->mailer->Body = $plainContent;
@@ -120,7 +120,7 @@ class SmtpMailer extends Mailer {
      *  @param array    $inlineImages   an array of image files to attach inline
      *  @return boolean
      */
-    public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
+    public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = array(), $customheaders = false, $plainContent = false, $inlineImages = false) {
         $this->configure();
         $this->mailer->IsHTML( true );
         if( $inlineImages ) {
@@ -142,13 +142,11 @@ class SmtpMailer extends Mailer {
      *  @param array    $inlineImages   an array of image files to attach inline
      *  @return boolean
      */
-    protected function sendMailViaSmtp( $to, $from, $subject, $attachedFiles = false, $customheaders = false, $inlineImages = false ) {
-
+    protected function sendMailViaSmtp( $to, $from, $subject, $attachedFiles = array(), $customheaders = false, $inlineImages = false ) {
         $result = false;
 
         if (!$from) {
-            $class = get_called_class();
-            $from =  $class::$conf['default_from']['email'];
+            $from =  self::$conf['default_from']['email'];
         }
 
         if( $this->mailer->SMTPDebug > 0 ) echo "<em><strong>*** Debug mode is on</strong>, printing debug messages and not redirecting to the website:</em><br />";
