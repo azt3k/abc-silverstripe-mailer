@@ -219,50 +219,41 @@ class SmtpMailer extends Mailer {
         if( !isset( $headers["X-Mailer"] ) ) $headers["X-Mailer"] = X_MAILER;
         if( !isset( $headers["X-Priority"] ) ) $headers["X-Priority"] = 3;
 
+        // clear existing headers
         $this->mailer->ClearCustomHeaders();
-        foreach( $headers as $header_name => $header_value ) {
-            if(strtolower($header_name) == 'bcc' || strtolower($header_name) == 'cc') {
 
+        // look at all the headers and handle appropriately
+        foreach ($headers as $header_name => $header_value) {
+
+            // split
+            if (in_array(strtolower($header_name), array('cc', 'bcc', 'reply-to', 'replyto')))
                 $addresses = preg_split('/(,|;)/', $header_value);
 
-                switch (strtolower($header_name)) {
-                    case 'bcc':
-                        foreach($addresses as $address) {
-                            $this->mailer->addBCC($address);
-                        }
-                        break;
-                    case 'cc':
-                        foreach($addresses as $address) {
-                            $this->mailer->addCC($address);
-                        }
-                        break;
-                }
-
-            } else {
-                $this->mailer->AddCustomHeader( $header_name.':'.$header_value );
+            // call setters rather than setting headers for:
+            //  - bcc
+            //  - cc
+            //  - reply-to
+            switch (strtolower($header_name)) {
+                case 'cc':
+                    foreach ($addresses as $address) {
+                        $this->mailer->addCC($address);
+                    }
+                    break;
+                case 'bcc':
+                    foreach ($addresses as $address) {
+                        $this->mailer->addBCC($address);
+                    }
+                    break;
+                case 'reply-to':
+                    foreach ($addresses as $address) {
+                        $this->mailer->addReplyTo($address);
+                    }
+                    break;
+                default:
+                    $this->mailer->AddCustomHeader($header_name . ':' . $header_value);
+                    break;
             }
         }
-		
-		//Convert cc/bcc/ReplyTo from headers to properties
-				foreach($headers as $header_name => $header_value){
-		                  if(in_array(strtolower($header_name), array('cc', 'bcc', 'reply-to', 'replyto'))){
-		                    $addresses = preg_split('/(,|;)/', $header_value);
-		                  }
-		                  switch(strtolower($header_name)) {
-		                    case 'cc':
-		                      foreach($addresses as $address){ $this->mailer->addCC($address); }
-		                      break;
-		                    case 'bcc':
-		                      foreach($addresses as $address) { $this->mailer->addBCC($address); }
-		                      break;
-		                    case 'reply-to':
-		                      foreach($addresses as $address) { $this->mailer->addReplyTo($address); }
-		                      break;
-		                    default:
-					$this->mailer->AddCustomHeader($header_name . ':' . $header_value);
-		                      break;
-		                  }
-				}
     }
 
     /**
@@ -272,8 +263,8 @@ class SmtpMailer extends Mailer {
     protected function attachFiles( array $attachedFiles ) {
         if( !empty( $attachedFiles ) and is_array( $attachedFiles ) ) {
             foreach( $attachedFiles as $attachedFile ) {
-				// Making attached files work again
-				//debug::dump($attachedFile['filename']);
+                // Making attached files work again
+                //debug::dump($attachedFile['filename']);
                 $this->mailer->AddAttachment( $attachedFile['filename'] );
             }
         }
