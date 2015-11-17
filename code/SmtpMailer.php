@@ -223,7 +223,26 @@ class SmtpMailer extends Mailer {
 
         $this->mailer->ClearCustomHeaders();
         foreach( $headers as $header_name => $header_value ) {
-            $this->mailer->AddCustomHeader( $header_name.':'.$header_value );
+            if(strtolower($header_name) == 'bcc' || strtolower($header_name) == 'cc') {
+
+                $addresses = preg_split('/(,|;)/', $header_value);
+
+                switch (strtolower($header_name)) {
+                    case 'bcc':
+                        foreach($addresses as $address) {
+                            $this->mailer->addBCC($address);
+                        }
+                        break;
+                    case 'cc':
+                        foreach($addresses as $address) {
+                            $this->mailer->addCC($address);
+                        }
+                        break;
+                }
+
+            } else {
+                $this->mailer->AddCustomHeader( $header_name.':'.$header_value );
+            }
         }
 
     }
