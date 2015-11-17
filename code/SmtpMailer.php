@@ -35,19 +35,19 @@ class SmtpMailer extends Mailer {
     }
 
     /**
-     *  @param  array|object $conf An associative array containing the configuration - see self::$conf for an example
+     *  @param  array|object $conf An associative array containing the configuration - see static::$conf for an example
      *  @return void
      */
     public static function set_conf($conf) {
         $conf = (array) $conf;
-        self::$conf = self::array_merge_recursive_distinct(self::$conf, $conf);
+        static::$conf = static::array_merge_recursive_distinct(static::$conf, $conf);
     }
 
     /**
      *  @return stdClass
      */
     public static function get_conf() {
-        return (object) self::array_merge_recursive_distinct(self::$defaults, self::$conf);
+        return (object) static::array_merge_recursive_distinct(static::$defaults, static::$conf);
     }
 
     /**
@@ -57,7 +57,7 @@ class SmtpMailer extends Mailer {
         $conf = (array) Config::inst()->get('SmtpMailer', 'conf');
         // die(print_r($conf,1));
         if (!empty($conf))
-            self::$conf = self::array_merge_recursive_distinct(self::$conf, $conf);
+            static::$conf = static::array_merge_recursive_distinct(static::$conf, $conf);
     }
 
     /**
@@ -66,10 +66,10 @@ class SmtpMailer extends Mailer {
     protected function configure() {
 
         // configure from YAML if available
-        self::set_conf_from_yaml();
+        static::set_conf_from_yaml();
 
         // get the configuration
-        $conf = self::get_conf();
+        $conf = static::get_conf();
 
         if ( !$this->mailer ) {
             $this->mailer = new PHPMailer( true );
@@ -146,7 +146,7 @@ class SmtpMailer extends Mailer {
         $result = false;
 
         if (!$from) {
-            $from =  self::$conf['default_from']['email'];
+            $from =  static::$conf['default_from']['email'];
         }
 
         if( $this->mailer->SMTPDebug > 0 ) echo "<em><strong>*** Debug mode is on</strong>, printing debug messages and not redirecting to the website:</em><br />";
@@ -268,7 +268,7 @@ class SmtpMailer extends Mailer {
 
         foreach ( $array2 as $key => $value ) {
             if ( is_array( $value ) && isset( $merged [$key] ) && is_array( $merged [$key] ) ) {
-                $merged [$key] = self::array_merge_recursive_distinct( $merged [$key], $value );
+                $merged [$key] = static::array_merge_recursive_distinct( $merged [$key], $value );
             } else {
                 $merged [$key] = $value;
             }
