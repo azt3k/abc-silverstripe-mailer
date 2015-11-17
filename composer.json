@@ -15,7 +15,7 @@
         "composer/installers"           : ">=1.0",
         "silverstripe/framework"        : "3.*",
         "silverstripe/cms"              : "3.*",
-        "phpmailer/phpmailer"           : "dev-master"
+        "phpmailer/phpmailer"           : "5.*"
     },
     "require-dev": {
         "phpunit/phpunit"               : "*@stable",
