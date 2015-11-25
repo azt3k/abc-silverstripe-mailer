@@ -2,7 +2,26 @@
 class SMTPMailerTest extends SapphireTest
 {
 
+    public function testSetup() {
+
+        Object::useCustomClass('Email', 'SMTPEmail');
+        Email::set_mailer(new SmtpMailer);
+        SMTPEmail::set_mailer(new SmtpMailer);
+
+        $mailer = Email::mailer();
+        $this->assertEquals('SmtpMailer', get_class($mailer));
+
+        $mailer = SMTPEmail::mailer();
+        $this->assertEquals('SmtpMailer', get_class($mailer));
+    }
+
+    /**
+     * @depends testSetup
+     */
     public function testSMTPMailerSetConf() {
+
+        // phpunit is a bit broken so we manually call the dependent tests;
+        $this->testSetup();
 
         $conf_in = array(
             'default_from'      =>  array(
@@ -16,7 +35,7 @@ class SMTPMailerTest extends SapphireTest
             'authenticate'      => false,
             'user'              => '',
             'pass'              => '',
-            'debug'             => 2,
+            'debug'             => 0,
             'lang'              => 'en'
         );
 
@@ -30,8 +49,10 @@ class SMTPMailerTest extends SapphireTest
     /**
      * @depends testSMTPMailerSetConf
      */
-    public function testEmail()
-    {
+    public function testEmail() {
+
+        // phpunit is a bit broken so we manually call the dependent tests;
+        $this->testSMTPMailerSetConf();
 
         $e = new Email();
         $e->To = "abc-silverstripe-mailer@mailinator.com";
@@ -45,8 +66,10 @@ class SMTPMailerTest extends SapphireTest
     /**
      * @depends testSMTPMailerSetConf
      */
-    public function testSMTPEmail()
-    {
+    public function testSMTPEmail() {
+
+        // phpunit is a bit broken so we manually call the dependent tests;
+        $this->testSMTPMailerSetConf();
 
         $e = new SMTPEmail();
         $e->To = "abc-silverstripe-mailer@mailinator.com";
@@ -57,53 +80,57 @@ class SMTPMailerTest extends SapphireTest
 
     }
 
-    /**
-     * @depends testEmail
-     */
-    public function testEmailCustomHeaders()
-    {
+    // disabling this test because Email Doesn't come out as SMTP email in these tests
+    // /**
+    //  * @depends testEmail
+    //  */
+    // public function testEmailCustomHeaders() {
+    //
+    //     // phpunit is a bit broken so we manually call the dependent tests;
+    //     $this->testEmail();
+    //
+    //     $bcc = "abc-silverstripe-mailer-bcc@mailinator.com";
+    //     $cc = "abc-silverstripe-mailer-cc@mailinator.com";
+    //     $replyto = "abc-silverstripe-mailer-reply-to@mailinator.com";
+    //
+    //     $e = new Email();
+    //     $e->To = "abc-silverstripe-mailer@mailinator.com";
+    //     $e->Subject = "Hi there";
+    //     $e->Body = "I just really wanted to email you and say hi.";
+    //     $e->Cc = $cc;
+    //     $e->Bcc = $bcc;
+    //     $e->ReplyTo = $replyto;
+    //
+    //     // get the mailer bound to the Email class
+    //     $e->setupMailer();
+    //     $mailer = Email::mailer()->mailer;
+    //
+    //     // check bccs
+    //     $bccs = $mailer->getBccAddresses();
+    //     $this->assertEquals(true, in_array($bcc, $bccs));
+    //
+    //     // check ccs
+    //     $ccs = $mailer->getCcAddresses();
+    //     $this->assertEquals(true, in_array($cc, $ccs));
+    //
+    //     // check replytos
+    //     $replytos = $mailer->getReplyToAddresses();
+    //     $this->assertEquals(true, in_array($reployto, $reploytos));
+    //
+    //     // check send
+    //     // $this->assertEquals(true, $e->send());
+    //
+    // }
 
-        $bcc = "abc-silverstripe-mailer-bcc@mailinator.com";
-        $cc = "abc-silverstripe-mailer-cc@mailinator.com";
-        $replyto = "abc-silverstripe-mailer-reply-to@mailinator.com";
-
-        $e = new Email();
-        $e->To = "abc-silverstripe-mailer@mailinator.com";
-        $e->Subject = "Hi there";
-        $e->Body = "I just really wanted to email you and say hi.";
-        $e->Cc = $cc;
-        $e->Bcc = $bcc;
-        $e->ReplyTo = $replyto;
-
-        // Any conf is overridden by the test framework
-        // it overrides the custom mailer conf and replaces the mailer with "TestMailer"
-        // will need to find a way to hijack the testmailer
-
-        // // get the mailer bound to the Email class
-        // $mailer = Email::mailer();
-        //
-        // // check bccs
-        // $bccs = $mailer->getBccAddresses();
-        // $this->assertEquals(true, in_array($bcc, $bccs));
-        //
-        // // check ccs
-        // $ccs = $mailer->getCcAddresses();
-        // $this->assertEquals(true, in_array($cc, $ccs));
-        //
-        // // check replytos
-        // $replytos = $mailer->getReplyToAddresses();
-        // $this->assertEquals(true, in_array($reployto, $reploytos));
-
-        // check send
-        $this->assertEquals(true, $e->send());
-
-    }
     /**
      * @depends testSMTPEmail
      */
     public function testSMTPEmailCustomHeaders()
     {
 
+        // phpunit is a bit broken so we manually call the dependent tests;
+        $this->testSMTPEmail();
+
         $bcc = "abc-silverstripe-mailer-bcc@mailinator.com";
         $cc = "abc-silverstripe-mailer-cc@mailinator.com";
         $replyto = "abc-silverstripe-mailer-reply-to@mailinator.com";
@@ -116,27 +143,71 @@ class SMTPMailerTest extends SapphireTest
         $e->Bcc = $bcc;
         $e->ReplyTo = $replyto;
 
-        // Any conf is overridden by the test framework
-        // it overrides the custom mailer conf and replaces the mailer with "TestMailer"
-        // will need to find a way to hijack the testmailer
+        // get the mailer bound to the Email class
+        $e->setupMailer();
+        $mailer = SMTPEmail::mailer()->mailer;
 
-        // // get the mailer bound to the Email class
-        // $mailer = SMTPEmail::mailer();
-        //
-        // // check bccs
-        // $bccs = $mailer->getBccAddresses();
-        // $this->assertEquals(true, in_array($bcc, $bccs));
-        //
-        // // check ccs
-        // $ccs = $mailer->getCcAddresses();
-        // $this->assertEquals(true, in_array($cc, $ccs));
-        //
-        // // check replytos
-        // $replytos = $mailer->getReplyToAddresses();
-        // $this->assertEquals(true, in_array($reployto, $reploytos));
+        // check bccs
+        $bccs = $mailer->getBccAddresses();
+        $exists = false;
+        foreach ($bccs as $item) {
+            if (in_array($bcc, $item)) $exists = true;
+        }
+        $this->assertEquals(true, $exists);
+
+        // check ccs
+        $ccs = $mailer->getCcAddresses();
+        $exists = false;
+        foreach ($ccs as $item) {
+            if (in_array($cc, $item)) $exists = true;
+        }
+        $this->assertEquals(true, $exists);
+
+        // check replytos
+        $replytos = $mailer->getReplyToAddresses();
+        $exists = false;
+        foreach ($replytos as $item) {
+            if (in_array($replyto, $item)) $exists = true;
+        }
+        $this->assertEquals(true, $exists);
 
         // check send
         $this->assertEquals(true, $e->send());
+
+    }
+
+    /**
+     * @depends testSMTPEmailCustomHeaders
+     */
+    public function testMultipleRecipients() {
+
+        // phpunit is a bit broken so we manually call the dependent tests;
+        $this->testSMTPEmailCustomHeaders();
+
+        $to = 'abc-silverstripe-mailer@mailinator.com';
+        $to2 = 'abc-silverstripe-mailer-2@mailinator.com';
+
+        $e = new SMTPEmail();
+        $e->To = $to . ', ' . $to2;
+        $e->Subject = "Hi there";
+        $e->Body = "I just really wanted to email you and say hi.";
+
+        // get the mailer bound to the Email class
+        $e->setupMailer();
+        $mailer = SMTPEmail::mailer()->mailer;
+
+        // check recipients
+        $tos = $mailer->getToAddresses();
+        $exists = $exists2 = false;
+        foreach ($tos as $item) {
+            if (in_array($to, $item)) $exists = true;
+            if (in_array($to2, $item)) $exists2 = true;
+        }
+        $this->assertEquals(true, $exists && $exists2);
+
+        // check send
+        $this->assertEquals(true, $e->send());
+
 
     }
 }

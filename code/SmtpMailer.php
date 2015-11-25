@@ -14,8 +14,8 @@ class SmtpMailer extends Mailer {
         'port'              => 25,
         'secure'            => null,
         'authenticate'      => false,
-        'user'              => 'username',
-        'pass'              => 'password',
+        'user'              => '',
+        'pass'              => '',
         'debug'             => 0,
         'lang'              => 'en'
     );
@@ -63,7 +63,7 @@ class SmtpMailer extends Mailer {
     /**
      *  @return void
      */
-    protected function configure() {
+    public function configure() {
 
         // configure from YAML if available
         static::set_conf_from_yaml();
@@ -86,6 +86,9 @@ class SmtpMailer extends Mailer {
             $this->mailer->SMTPDebug = $conf->debug;
             $this->mailer->SetLanguage( $conf->lang );
         }
+
+        // chain me
+        return $this;
     }
 
     /**
@@ -127,7 +130,7 @@ class SmtpMailer extends Mailer {
             $this->mailer->MsgHTML( $htmlContent, Director::baseFolder() );
         } else {
             $this->mailer->Body = $htmlContent;
-            if( empty( $plainContent ) ) $plainContent = trim( Convert::html2raw( $htmlContent ) );
+            if (empty($plainContent)) $plainContent = trim( Convert::html2raw( $htmlContent ) );
             $this->mailer->AltBody = $plainContent;
         }
         return $this->sendMailViaSmtp( $to, $from, $subject, $attachedFiles, $customheaders, $inlineImages );
@@ -142,26 +145,63 @@ class SmtpMailer extends Mailer {
      *  @param array    $inlineImages   an array of image files to attach inline
      *  @return boolean
      */
-    protected function sendMailViaSmtp( $to, $from, $subject, $attachedFiles = array(), $customheaders = false, $inlineImages = false ) {
+    public function setupMailer($to, $from, $subject, $attachedFiles = array(), $customheaders = false) {
+
+        // init this for later if we need it
+        $msgForLog = '';
+
+        // make sure we have a mailer
+        if (!$this->mailer) $this->configure();
+
+        // default result
         $result = false;
 
-        if (!$from) {
-            $from =  static::$conf['default_from']['email'];
+        // default from
+        if (!$from) $from =  static::$conf['default_from']['email'];
+
+        // try to update stuff
+        try {
+
+            $this->buildBasicMail( $to, $from, $subject );
+            $this->addCustomHeaders( $customheaders );
+            $this->attachFiles( (array) $attachedFiles );
+            $result = true;
+
+        } catch( phpmailerException $e ) {
+            $this->handleError( $e->errorMessage(), $msgForLog );
+        } catch( Exception $e ) {
+            $this->handleError( $e->getMessage(), $msgForLog );
         }
+
+        return $result;
+    }
+
+    /**
+     *  @param string   $to             the recipient
+     *  @param string   $from           the sender
+     *  @param string   $subject        the subject
+     *  @param array    $attachedFiles  an array of files to attach
+     *  @param array    $customheaders  an array of custom headers to attach
+     *  @param array    $inlineImages   an array of image files to attach inline
+     *  @return boolean
+     */
+    protected function sendMailViaSmtp( $to, $from, $subject, $attachedFiles = array(), $customheaders = false, $inlineImages = false ) {
+
+        // default result
+        $result = false;
 
         if( $this->mailer->SMTPDebug > 0 ) echo "<em><strong>*** Debug mode is on</strong>, printing debug messages and not redirecting to the website:</em><br />";
         $msgForLog = "\n*** The sender was : $from\n*** The message was :\n{$this->mailer->AltBody}\n";
 
         try {
-            $this->buildBasicMail( $to, $from, $subject );
-            $this->addCustomHeaders( $customheaders );
-            $this->attachFiles( $attachedFiles );
-            $result = $this->mailer->Send();
+
+            // try to send
+            if ($this->setupMailer($to, $from, $subject, $attachedFiles, $customheaders))
+                $result = $this->mailer->send();
 
             if( $this->mailer->SMTPDebug > 0 ) {
                 echo "<em><strong>*** E-mail to $to has been sent.</strong></em><br />";
                 echo "<em><strong>*** The debug mode blocked the process</strong> to avoid the url redirection. So the CC e-mail is not sent.</em>";
-                die();
             }
 
         } catch( phpmailerException $e ) {
@@ -193,20 +233,38 @@ class SmtpMailer extends Mailer {
      */
     protected function buildBasicMail( $to, $from, $subject )
     {
-        if( preg_match('/(\'|")(.*?)\1[ ]+<[ ]*(.*?)[ ]*>/', $from, $from_splitted ) ) {
+        if( preg_match('/(\'|")(.*?)\1[ ]+<[ ]*(.*?)[ ]*>/', $from, $from_split ) ) {
             // If $from countain a name, e.g. "My Name" <me@acme.com>
-            $this->mailer->SetFrom( $from_splitted[3], $from_splitted[2] );
+            $this->mailer->SetFrom( $from_split[3], $from_split[2] );
         }
         else {
             $this->mailer->SetFrom( $from );
         }
 
-        // not entirely sure what this will do
-        if (!Email::validEmailAddress($to)) $to = false;
-
-        $this->mailer->ClearAddresses();
-        $this->mailer->AddAddress( $to, ucfirst( substr( $to, 0, strpos( $to, '@' ) ) ) ); // For the recipient's name, the string before the @ from the e-mail address is used
+        // set subject
         $this->mailer->Subject = $subject;
+
+        // clear addresses
+        $this->mailer->ClearAddresses();
+
+        // split addresses
+        $tos = explode(',', $to);
+
+        // add addresses
+        foreach ($tos as $addr) {
+
+            // clean
+            $addr = trim($addr);
+
+            // validate
+            if (Email::validEmailAddress($addr)) {
+
+                // For the recipient's name, the string before the @ from the e-mail address is used
+                // this doesn't support the "Mr Nobody <mr.nobobdygmail.com>" syntax
+                $this->mailer->AddAddress($addr, ucfirst(substr($addr, 0, strpos( $addr, '@' ))));
+            }
+        }
+
     }
 
     /**
@@ -245,6 +303,7 @@ class SmtpMailer extends Mailer {
                     }
                     break;
                 case 'reply-to':
+                case 'replyto':
                     foreach ($addresses as $address) {
                         $this->mailer->addReplyTo($address);
                     }
@@ -261,10 +320,8 @@ class SmtpMailer extends Mailer {
      *  @return void
      */
     protected function attachFiles( array $attachedFiles ) {
-        if( !empty( $attachedFiles ) and is_array( $attachedFiles ) ) {
+        if( !empty( $attachedFiles ) && is_array( $attachedFiles ) ) {
             foreach( $attachedFiles as $attachedFile ) {
-                // Making attached files work again
-                //debug::dump($attachedFile['filename']);
                 $this->mailer->AddAttachment( $attachedFile['filename'] );
             }
         }

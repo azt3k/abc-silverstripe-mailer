@@ -20,6 +20,24 @@ php $DIR/travis-support/travis_setup.php --source $PDIR/.. --target $DIR/ss
 # make some mods to the project build
 mkdir $DIR/ss/silverstripe-cache
 
+# inject the autoloader
+# echo "
+# <?php
+#
+# global \$project;
+# \$project = 'mysite';
+#
+# global \$database;
+# \$database = '';
+#
+# require_once __DIR__ . '/../vendor/autoload.php';
+# require_once('conf/ConfigureFromEnv.php');
+#
+# // Set the site locale
+# i18n::set_locale('en_US');
+#
+# " > $DIR/ss/mysite/_config.php
+
 # apply patch
 # echo "<?php
 # if (!class_exists('PHPUnit_Framework_TestResult')) require_once 'PHPUnit/Framework/TestResult.php';
