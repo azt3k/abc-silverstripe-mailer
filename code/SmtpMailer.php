@@ -257,12 +257,12 @@ class SmtpMailer extends Mailer {
             $addr = trim($addr);
 
             // validate
-            if (Email::validEmailAddress($addr)) {
+            // if (Email::validEmailAddress($addr)) {
 
                 // For the recipient's name, the string before the @ from the e-mail address is used
                 // this doesn't support the "Mr Nobody <mr.nobobdygmail.com>" syntax
                 $this->mailer->AddAddress($addr, ucfirst(substr($addr, 0, strpos( $addr, '@' ))));
-            }
+            // }
         }
 
     }
