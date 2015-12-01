@@ -33,7 +33,8 @@ class SMTPEmail extends Email {
         if (!$attachedFilename) $attachedFilename = str_replace(Director::baseFolder(), '', $filename);
 
         // Get the full path
-        if (!file_exists($filename)) $absoluteFileName = Director::getAbsFile($filename);
+        $absoluteFileName = $filename;
+        if (!file_exists($absoluteFileName)) $absoluteFileName = Director::getAbsFile($filename);
 
         // try to attach the file
         if (file_exists($absoluteFileName)) {
