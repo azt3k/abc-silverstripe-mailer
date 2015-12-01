@@ -322,7 +322,15 @@ class SmtpMailer extends Mailer {
     protected function attachFiles( array $attachedFiles ) {
         if( !empty( $attachedFiles ) && is_array( $attachedFiles ) ) {
             foreach( $attachedFiles as $attachedFile ) {
-                $this->mailer->AddAttachment( $attachedFile['filename'] );
+
+                // resolve file path
+                // this is kind of weird because we are using attach file from strin in SMTPEmail
+                $fileName = $attachedFile['filename'];
+                if (!file_exists($fileName)) $fileName = Director::getAbsFile($fileName);
+
+                // attach file
+                $this->mailer->AddAttachment($fileName);
+
             }
         }
     }
