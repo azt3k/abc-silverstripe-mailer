@@ -21,7 +21,7 @@ class SMTPEmail extends Email {
     }
 
     /**
-     * [attachFile description]
+     * proxy method for file attachments
      * @param  [type] $filename         [description]
      * @param  [type] $attachedFilename [description]
      * @param  [type] $mimetype         [description]
@@ -33,15 +33,18 @@ class SMTPEmail extends Email {
         if (!$attachedFilename) $attachedFilename = trim(str_replace(Director::baseFolder(), '', $filename), '/');
 
         // Get the full path
-        $absoluteFileName = $filename;
-        if (!file_exists($absoluteFileName)) $absoluteFileName = Director::getAbsFile($filename);
+        if (!file_exists($filename)) $filename = Director::getAbsFile($filename);
 
         // try to attach the file
-        if (file_exists($absoluteFileName)) {
-            $this->attachFileFromString(file_get_contents($absoluteFileName), $attachedFilename, $mimetype);
-        } else {
-            user_error("Could not attach '$absoluteFileName' to email. File does not exist.", E_USER_NOTICE);
+        if (file_exists($filename)) {
+            $this->attachFileFromString(file_get_contents($filename), $attachedFilename, $mimetype);
         }
+
+        // throw
+        else {
+            throw new Exception("Could not attach '$filename' to email. File does not exist.");
+        }
+
         return $this;
     }
 

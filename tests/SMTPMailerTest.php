@@ -208,6 +208,77 @@ class SMTPMailerTest extends SapphireTest
         // check send
         $this->assertEquals(true, $e->send());
 
+    }
+
+    /**
+     * @depends testSMTPEmail
+     */
+    public function testFSAttachmentEmail() {
+
+        // phpunit is a bit broken so we manually call the dependent tests;
+        $this->testSMTPEmail();
+
+        // create file
+        $fileContents = 'test content';
+        $fileName = 'test.txt';
+        $type = 'text/plain';
+        $absFileName = sys_get_temp_dir() . '/' . $fileName;
+        file_put_contents($absFileName, $fileContents);
+
+        // create email
+        $e = new SMTPEmail();
+        $e->To = 'abc-silverstripe-mailer@mailinator.com';
+        $e->Subject = "Hi there";
+        $e->Body = "I just really wanted to email you and say hi.";
+        $e->attachFile($absFileName, $fileName, $type);
+
+        // get the mailer bound to the Email class
+        $e->setupMailer();
+        $mailer = SMTPEmail::mailer()->mailer;
+
+        // check attached files
+        $files = $mailer->getAttachments();
+        $this->assertEquals(true, $files[0][0] == $fileContents);
+        $this->assertEquals(true, $files[0][1] == $fileName);
+        $this->assertEquals(true, $files[0][4] == $type);
+
+        // check send
+        $this->assertEquals(true, $e->send());
+
+    }
+
+    /**
+     * @depends testSMTPEmail
+     */
+    public function testStringAttachmentEmail() {
+
+        // phpunit is a bit broken so we manually call the dependent tests;
+        $this->testSMTPEmail();
+
+        // create file
+        $fileContents = 'test content';
+        $fileName = 'test.txt';
+        $type = 'text/plain';
+
+        // create email
+        $e = new SMTPEmail();
+        $e->To = 'abc-silverstripe-mailer@mailinator.com';
+        $e->Subject = "Hi there";
+        $e->Body = "I just really wanted to email you and say hi.";
+        $e->attachFileFromString($fileContents, $fileName, $type);
+
+        // get the mailer bound to the Email class
+        $e->setupMailer();
+        $mailer = SMTPEmail::mailer()->mailer;
+
+        // check attached files
+        $files = $mailer->getAttachments();
+        $this->assertEquals(true, $files[0][0] == $fileContents);
+        $this->assertEquals(true, $files[0][1] == $fileName);
+        $this->assertEquals(true, $files[0][4] == $type);
+
+        // check send
+        $this->assertEquals(true, $e->send());
 
     }
 }
