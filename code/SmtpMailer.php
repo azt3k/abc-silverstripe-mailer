@@ -324,7 +324,7 @@ class SmtpMailer extends Mailer {
             foreach( $attachedFiles as $attachedFile ) {
 
                 // all attached files are stashed as strings in the attached files array
-                // see Email class for more info
+                // see Email and SMTPEMail classes for more info
                 $this->mailer->AddStringAttachment(
                     $attachedFile['contents'],
                     $attachedFile['filename'],
