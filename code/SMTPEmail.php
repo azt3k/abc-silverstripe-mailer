@@ -48,6 +48,10 @@ class SMTPEmail extends Email {
         return $this;
     }
 
+    public function Absolute($link) {
+        return Director::protocolAndHost() . str_replace('//','/', '/' . $link);
+    }
+
     /**
      * this is mainly a test harness
      * @return [type] [description]
