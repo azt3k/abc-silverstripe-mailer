@@ -2,8 +2,8 @@
 class SMTPMailerTest extends SapphireTest
 {
 
-    public function testSetup() {
-
+    public function testSetup()
+    {
         Object::useCustomClass('Email', 'SMTPEmail');
         Email::set_mailer(new SmtpMailer);
         SMTPEmail::set_mailer(new SmtpMailer);
@@ -18,7 +18,8 @@ class SMTPMailerTest extends SapphireTest
     /**
      * @depends testSetup
      */
-    public function testSMTPMailerSetConf() {
+    public function testSMTPMailerSetConf()
+    {
 
         // phpunit is a bit broken so we manually call the dependent tests;
         $this->testSetup();
@@ -49,7 +50,8 @@ class SMTPMailerTest extends SapphireTest
     /**
      * @depends testSMTPMailerSetConf
      */
-    public function testEmail() {
+    public function testEmail()
+    {
 
         // phpunit is a bit broken so we manually call the dependent tests;
         $this->testSMTPMailerSetConf();
@@ -60,13 +62,13 @@ class SMTPMailerTest extends SapphireTest
         $e->Body = "I just really wanted to email you and say hi.";
 
         $this->assertEquals(true, $e->send());
-
     }
 
     /**
      * @depends testSMTPMailerSetConf
      */
-    public function testSMTPEmail() {
+    public function testSMTPEmail()
+    {
 
         // phpunit is a bit broken so we manually call the dependent tests;
         $this->testSMTPMailerSetConf();
@@ -77,7 +79,6 @@ class SMTPMailerTest extends SapphireTest
         $e->Body = "I just really wanted to email you and say hi.";
 
         $this->assertEquals(true, $e->send());
-
     }
 
     // disabling this test because Email Doesn't come out as SMTP email in these tests
@@ -151,7 +152,9 @@ class SMTPMailerTest extends SapphireTest
         $bccs = $mailer->getBccAddresses();
         $exists = false;
         foreach ($bccs as $item) {
-            if (in_array($bcc, $item)) $exists = true;
+            if (in_array($bcc, $item)) {
+                $exists = true;
+            }
         }
         $this->assertEquals(true, $exists);
 
@@ -159,7 +162,9 @@ class SMTPMailerTest extends SapphireTest
         $ccs = $mailer->getCcAddresses();
         $exists = false;
         foreach ($ccs as $item) {
-            if (in_array($cc, $item)) $exists = true;
+            if (in_array($cc, $item)) {
+                $exists = true;
+            }
         }
         $this->assertEquals(true, $exists);
 
@@ -167,19 +172,21 @@ class SMTPMailerTest extends SapphireTest
         $replytos = $mailer->getReplyToAddresses();
         $exists = false;
         foreach ($replytos as $item) {
-            if (in_array($replyto, $item)) $exists = true;
+            if (in_array($replyto, $item)) {
+                $exists = true;
+            }
         }
         $this->assertEquals(true, $exists);
 
         // check send
         $this->assertEquals(true, $e->send());
-
     }
 
     /**
      * @depends testSMTPEmailCustomHeaders
      */
-    public function testMultipleRecipients() {
+    public function testMultipleRecipients()
+    {
 
         // phpunit is a bit broken so we manually call the dependent tests;
         $this->testSMTPEmailCustomHeaders();
@@ -200,20 +207,24 @@ class SMTPMailerTest extends SapphireTest
         $tos = $mailer->getToAddresses();
         $exists = $exists2 = false;
         foreach ($tos as $item) {
-            if (in_array($to, $item)) $exists = true;
-            if (in_array($to2, $item)) $exists2 = true;
+            if (in_array($to, $item)) {
+                $exists = true;
+            }
+            if (in_array($to2, $item)) {
+                $exists2 = true;
+            }
         }
         $this->assertEquals(true, $exists && $exists2);
 
         // check send
         $this->assertEquals(true, $e->send());
-
     }
 
     /**
      * @depends testSMTPEmail
      */
-    public function testFSAttachmentEmail() {
+    public function testFSAttachmentEmail()
+    {
 
         // phpunit is a bit broken so we manually call the dependent tests;
         $this->testSMTPEmail();
@@ -244,13 +255,13 @@ class SMTPMailerTest extends SapphireTest
 
         // check send
         $this->assertEquals(true, $e->send());
-
     }
 
     /**
      * @depends testSMTPEmail
      */
-    public function testStringAttachmentEmail() {
+    public function testStringAttachmentEmail()
+    {
 
         // phpunit is a bit broken so we manually call the dependent tests;
         $this->testSMTPEmail();
@@ -279,6 +290,5 @@ class SMTPMailerTest extends SapphireTest
 
         // check send
         $this->assertEquals(true, $e->send());
-
     }
 }
