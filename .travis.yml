@@ -11,10 +11,13 @@ env:
    - DB=MYSQL CORE_RELEASE=3.0
    - DB=MYSQL CORE_RELEASE=3.1
    - DB=MYSQL CORE_RELEASE=3.2
+   - DB=MYSQL CORE_RELEASE=3.3
+   - DB=MYSQL CORE_RELEASE=3.4
+   - DB=MYSQL CORE_RELEASE=3.5
 
 matrix:
   allow_failures:
-    - php: 7.0    
+    - php: 7.0
   include:
     - php: 5.5
       env: DB=MYSQL CORE_RELEASE=master

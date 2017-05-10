@@ -1,0 +1,7 @@
+---
+Name: abc-silverstripe-mailer
+After: 'framework/*','cms/*'
+---
+Injector:
+  Email:
+    class: SMTPEmail
