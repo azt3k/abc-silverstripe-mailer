@@ -256,8 +256,8 @@ class SMTPMailerTest extends SapphireTest
         $this->testSMTPEmail();
 
         // create file
-        $fileContents = 'test content';
-        $fileName = 'test.txt';
+        $fileContents = 'test content 2';
+        $fileName = 'test2.txt';
         $type = 'text/plain';
 
         // create email
