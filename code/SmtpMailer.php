@@ -353,7 +353,7 @@ class SmtpMailer extends Mailer {
      */
     protected function attachFiles(array $attachedFiles) {
         if (!empty($attachedFiles) && is_array($attachedFiles)) {
-            foreach($attachedFiles as $attachedFile) {
+            foreach ($attachedFiles as $attachedFile) {
 
                 // all attached files are stashed as strings in the attached files array
                 // see Email and SMTPEMail classes for more info
