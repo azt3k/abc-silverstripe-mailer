@@ -14,6 +14,7 @@ env:
    - DB=MYSQL CORE_RELEASE=3.3
    - DB=MYSQL CORE_RELEASE=3.4
    - DB=MYSQL CORE_RELEASE=3.5
+   - DB=MYSQL CORE_RELEASE=3.6
 
 matrix:
   allow_failures:

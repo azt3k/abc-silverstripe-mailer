@@ -16,7 +16,7 @@ class SMTPEmail extends Email {
      * @param [type] $val [description]
      */
     public function setReplyTo($val) {
-        $this->replyTo($val);
+        $this->addCustomHeader('Reply-To', $val);
         return $this;
     }
 
