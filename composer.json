@@ -18,7 +18,7 @@
         "phpmailer/phpmailer"           : "~5.2.23"
     },
     "require-dev": {
-        "phpunit/phpunit"               : "*@stable",
+        "phpunit/PHPUnit"               : "~3.7",
         "silverstripe/sqlite3"          : "*"
     },
     "extra": {

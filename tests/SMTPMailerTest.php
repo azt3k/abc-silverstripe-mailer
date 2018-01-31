@@ -282,14 +282,28 @@ class SMTPMailerTest extends SapphireTest
 
     }
 
-    /**
-     * @depends testSMTPEmail
-     */
-    public function testForgotPasswordSMTPEmail() {
+    public function testForgotPasswordEmail() {
 
         $e = new ForgotPasswordSMTPEmail();
 
         $this->assertEquals('ForgotPasswordEmail', $e->ss_template);
+    }
+
+    public function testForgotPasswordSend() {
+
+        $data = Array (
+            'FirstName' => 'John',
+            'PasswordResetLink' => '/reset-link-123',
+            'AbsoluteBaseURL' => 'www.silverstripe.com'
+        );
+
+        $to = 'abc@silverstripe.co.nz';
+
+        $e = Member_ForgotPasswordEmail::create();
+		$e->populateTemplate($data);
+		$e->setTo($to);
+
         $this->assertEquals(true, $e->send());
     }
+
 }
