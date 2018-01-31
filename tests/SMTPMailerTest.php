@@ -287,6 +287,10 @@ class SMTPMailerTest extends SapphireTest
      */
     public function testForgotPasswordSMTPEmail() {
 
+
+        // phpunit is a bit broken so we manually call the dependent tests;
+        $this->testSMTPEmail();
+
         $e = new ForgotPasswordSMTPEmail();
 
         $this->assertEquals('ForgotPasswordEmail', $e->ss_template);
