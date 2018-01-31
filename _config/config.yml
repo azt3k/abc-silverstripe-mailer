@@ -5,3 +5,5 @@ After: 'framework/*','cms/*'
 Injector:
   Email:
     class: SMTPEmail
+  Member_ForgotPasswordEmail:
+    class: ForgotPasswordSMTPEmail
