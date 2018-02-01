@@ -1,7 +1,7 @@
 {
     "name": "azt3k/abc-silverstripe-mailer",
     "description": "Library that adds smtp mail support to Silverstripe",
-    "license": "0BSD",
+    "license": "BSD-3-Clause-Clear",
     "type": "silverstripe-module",
     "authors": [
         {
