@@ -80,6 +80,7 @@ class SmtpMailer extends Mailer {
             $this->mailer->Host = $conf->server;
             $this->mailer->Port = $conf->port;
             $this->mailer->SMTPSecure = $conf->secure;
+            if (empty($conf->secure)) $this->mailer->SMTPAutoTLS = false; //Do not try to automatically detect the availability of TLS if security is disabled.
             $this->mailer->SMTPAuth = $conf->authenticate;
             $this->mailer->SMTPDebug = $conf->debug;
             $this->mailer->SetLanguage($conf->lang);
